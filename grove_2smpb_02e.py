@@ -1,16 +1,8 @@
 # coding: utf-8
 # Driver for 2SMPD-02E
 
-import smbus
-import RPi.GPIO as GPIO
+import machine
 import time
-
-# use the bus that matches your raspi version
-rev = GPIO.RPI_REVISION
-if rev == 2 or rev == 3:
-    bus = smbus.SMBus(1)
-else:
-    bus = smbus.SMBus(0)
 
 class Grove2smpd02e:
 
@@ -68,25 +60,26 @@ class Grove2smpd02e:
     MODE_FORCED = 0x1
     MODE_NORMAL = 0x3
  
-    def __init__(self,address=0x56):
+    def __init__(self,address=0x56,bus=None):
+        self.bus = machine.I2C(1) if bus is None else bus
         self.I2C_ADDR = address
         self.writeByteData(0xf5, 0x00)
         time.sleep(0.5)
         self.setAverage(self.AVG_1,self.AVG_1)
  
     def writeByteData(self,address,data):
-        bus.write_byte_data(self.I2C_ADDR, address, data)
+        self.bus.writeto_mem(self.I2C_ADDR, address, bytes([data]))
  
     def readByte(self,addr):
-        data = bus.read_i2c_block_data(self.I2C_ADDR, addr, 1)
+        data = self.bus.readfrom_mem(self.I2C_ADDR, addr, 1)
         return data[0]
  
     def readByteData(self,addr,num):
-        data = bus.read_i2c_block_data(self.I2C_ADDR, addr, num)
+        data = self.bus.readfrom_mem(self.I2C_ADDR, addr, num)
         return data
  
     def setAverage(self,avg_tem,avg_pressure):
-        bus.write_byte_data(self.I2C_ADDR, self.REG_CTRL_MEAS, 0x27)
+        self.bus.writeto_mem(self.I2C_ADDR, self.REG_CTRL_MEAS, bytes([0x27]))
  
     def readRawTemp(self):
         temp_txd2 = self.readByte(self.REG_TEMP_TXD2)
