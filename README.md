@@ -1,62 +1,31 @@
 # 2smpb02e-grove-raspberrypi
-It is a module for evaluating Omron sensor 2SMPB-02E with Raspberry Pi 3 Model B and a sample program when using a module.  
+オムロン製センサ 2SMPB-02E を MiroPythonで評価するためのモジュールとサンプルプログラム。
 
-2SMPB-02E is a compact MEMS absolute pressure sensor with high accuracy and low current consumption.  
-Built-in 24-bit ADC with low noise, it can measure atmospheric pressure with high accuracy.  
-Control and output are digital methods via the I2C/SPI interface, which realizes low current consumption by automatic sleep mode.
+## 使い方
 
-## language
-- [English](./README.md)
-- [Japanase](./README_ja.md)
+* MicroPythonが動いているボードに `grove_2smpb_02e.py` をコピーします。
+* `import grove_2smpb_02e`としてモジュールをインポートします。
+* 2SMPB-02Eを接続したGroveのI2Cに対応する `machine.I2C` のインスタンスを作成します。
+    * Wio-LTEの場合は `machine.I2C(1)`
+* `bus`引数にI2Cのインスタンスを指定して `Grove2smpd02e`のインスタンスを作成します。
+* `Grove2smpd02e.readData()`を呼び出すとセンサのデータが返ってきます。
+    * `(temperature, humidity)`のtupleが返ってきます。
 
-## Description
-- grove_2smpb_02e.py  
-Driver module for acquiring data from 2SMPB-02E via GrovePi+.
+```Python
+import grove_2smpb_02e
+import machine
 
-- sample_2smpb_02e.py  
-It is a sample program that allows you to check the data acquired via the driver module on the console.
+i2c = machine.I2C(1)
+addr = i2c.scan()
+sensor = grove_2smpb_02e.Grove2smpd02e(bus=i2c, address=addr[0])
+print(sensor.readData())
+```
 
-- sample_gui_2smpb_02e.py  
-It is a sample program that enables you to visualize and check the data acquired via the driver module with graphs.
+## ライセンス
+* 元はOMRONのRaspberry Pi用Pythonモジュール(MITライセンス)なので、変更後のコードもMITライセンスに従います。
 
-***DEMO:***  
-When you run sample_gui_2smpb_02e.py, you can see the following graph.  
-
-![Graph_2SMPB](Graph_2SMPB.png)
-
-## Installation
-1. It is necessary to install dependency software beforehand.  
-    [Dependencies](#link)
-2. Open Terminal and execute the following command.    
-    ```
-    $ mkdir omron_sensor
-    $ cd omron_sensor
-    $ git clone https://github.com/omron-devhub/2smpb02e-grove-raspberrypi.git
-    ```
-
-## Usage
-Procedure to operate the sample program.
--  sample_2smpb_02e.py  
-Open Terminal and execute the following command.  
-    ```
-    $ cd omron_sensor
-    $ sudo python3 sample_2smpb_02e.py
-    ```
-- sample_gui_2smpb_02e.py  
-Open Terminal and execute the following command.  
-    ```
-    $ cd omron_sensor
-    $ sudo python3 sample_gui_2smpb_02e.py
-    ```
-
-## Dependencies
-2smpb02e-grove-raspberrypi requires the following dependencies:
-- [Python3](https://www.python.org/)
-- [GrovePi+](http://wiki.seeedstudio.com/GrovePi_Plus/)
-- [matplotlib](https://matplotlib.org/)
-- [smbus2](https://pypi.org/project/smbus2/)
-
-## Licence
+### 元のコードのライセンス表記
 Copyright (c) OMRON Corporation. All rights reserved.
 
-Licensed under the MIT License.
+このリポジトリはMITライセンスの下でライセンスされています。
+
