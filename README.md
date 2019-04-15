@@ -1,5 +1,8 @@
-# 2smpb02e-grove-raspberrypi
-オムロン製センサ 2SMPB-02E を MiroPythonで評価するためのモジュールとサンプルプログラム。
+# 2smpb02e-grove-wiolte
+オムロン製センサ 2SMPB-02E を MicroPythonで評価するためのモジュールとサンプルプログラム。
+
+## 動作確認
+* MicroPython on Wio LTE
 
 ## 使い方
 
